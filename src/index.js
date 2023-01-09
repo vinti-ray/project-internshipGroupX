@@ -3,6 +3,8 @@ const app=express()
 const { default: mongoose} =require("mongoose")
 const route=require("./routes/route")
 
+mongoose.set('strictQuery', false);
+
 app.use(express.json())
 
 mongoose.connect("mongodb+srv://vintiray:7091201680@cluster0.ahtxrqr.mongodb.net/groupXDatabase", {
