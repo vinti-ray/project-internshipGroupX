@@ -71,40 +71,23 @@ const getColleges = async (req, res) => {
         .send({ status: false, message: "Please Enter  College Name" });
     }
 
-    let collegeId = await CollegeModel.find({ name: collegeName }).select({
-      _id: 1,
-    });
+    const dataFromCollege=await CollegeModel.findOne({name:collegeName})
 
-    if (collegeId.length == 0) {
-      return res
-        .status(404)
-        .send({ status: false, message: "Please enter a valid name" });
-    }
+    if(!dataFromCollege)   return res.status(404).send({ status: false, message: "no college found with this name" });
 
-    let interns = await InternModel.find({ collegeId: collegeId }).select({
-      name: 1,
-      email: 1,
-      mobile: 1,
-      _id: 1,
-    });
+     const dataOfIntern=await InternModel.find({collegeId:dataFromCollege._id}).select({isDeleted:0,collegeId:0,__v:0})
 
-    if (interns.length == 0) {
-      let x = `no interns of ${collegeName} collage`;
-    } else {
-      var x = interns;
-    }
+      if(dataOfIntern.length==0)   return res.status(404).send({ status: false, message: "no intern applied for internship at this college" });
 
-    const result = await CollegeModel.findOne({ name: collegeName }).select({
-      _id: 0,
-      createdAt: 0,
-      updatedAt: 0,
-      _v: 0,
-    });
+      let data={
+        name:collegeName,
+        fullName:dataFromCollege.fullName,
+        logoLink:dataFromCollege.logoLink,
+        interns:dataOfIntern
+      }
 
-    result._doc.interns = x;
+    return res.status(200).send({ status: true, data: data });
 
-    return res.status(200).send({ status: true, data: result });
-    
   } catch (err) {
     console.log(err);
     return res.status(500).send({ status: false, message: err.message });
@@ -114,7 +97,3 @@ const getColleges = async (req, res) => {
 // << Exported Modules =>>
 module.exports = { createCollege, getColleges };
 
-//### GET /functionup/collegeDetails
-// - Returns the college details for the requested college (Expect a query parameter by the name `collegeName`. This is anabbreviated college name. For example `iith`)
-// - Returns the list of all interns who have applied for internship at this college.
-// - The response structure should look like [this](#college-details)
