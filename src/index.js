@@ -1,11 +1,11 @@
 const express=require("express")
 const app=express()
-const mongoose=require("mongoose")
+const { default: mongoose} =require("mongoose")
 const route=require("./routes/route")
 
 app.use(express.json())
 
-mongoose.connect("mongodb+srv://vintiray:7091201680@cluster0.ahtxrqr.mongodb.net/test", {
+mongoose.connect("mongodb+srv://vintiray:7091201680@cluster0.ahtxrqr.mongodb.net/groupXDatabase", {
     useNewUrlParser: true
 })
 
