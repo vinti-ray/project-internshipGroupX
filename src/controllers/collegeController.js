@@ -87,19 +87,24 @@ const getColleges = async (req, res) => {
       mobile: 1,
       _id: 1,
     });
+
     if (interns.length == 0) {
-      var x = `no interns of ${collegeName} collage`;
+      let x = `no interns of ${collegeName} collage`;
     } else {
       var x = interns;
     }
+
     const result = await CollegeModel.findOne({ name: collegeName }).select({
       _id: 0,
       createdAt: 0,
       updatedAt: 0,
       _v: 0,
     });
+
     result._doc.interns = x;
+
     return res.status(200).send({ status: true, data: result });
+    
   } catch (err) {
     console.log(err);
     return res.status(500).send({ status: false, message: err.message });
@@ -108,3 +113,8 @@ const getColleges = async (req, res) => {
 
 // << Exported Modules =>>
 module.exports = { createCollege, getColleges };
+
+//### GET /functionup/collegeDetails
+// - Returns the college details for the requested college (Expect a query parameter by the name `collegeName`. This is anabbreviated college name. For example `iith`)
+// - Returns the list of all interns who have applied for internship at this college.
+// - The response structure should look like [this](#college-details)

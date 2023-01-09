@@ -1,9 +1,7 @@
 const interModel = require("../models/internModel");
 const collegeModel = require("../models/collegeModel");
 
-//<<<========= ======== validation function Imported here =========>>>
-
-
+//________________ validation function Imported here ___________________
 
 const {
   isValidEmail,
@@ -41,15 +39,14 @@ const createIntern = async (req, res) => {
         .status(400)
         .send({ status: false, msg: "Please Enter a valid Email Id." });
 
-    let emailExited = await interModel.findOne({ email: email });
+    let existingData = await interModel.findOne({
+      $or: [{ mobile: mobile }, { email: email }],
+    });
 
-    if (emailExited)
-      return res
-        .status(400)
-        .send({
-          status: false,
-          msg: "This Email already existed, Please Try another !",
-        });
+    if (existingData) {
+      if (existingData.email == email)
+        return res.status(400).send({ msg: "email already in use" });
+    }
 
     if (!mobile)
       return res
@@ -57,23 +54,15 @@ const createIntern = async (req, res) => {
         .send({ status: false, message: "Please Enter Your Mobile Number" });
 
     if (!isValidMobile(mobile.trim()))
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "Mobile no. should contain only 10 digits",
-        });
-
-    let existedMobile = await interModel.findOne({ mobile });
-
-    if (existedMobile)
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "This Mobile No. is already registered",
-        });
-
+      return res.status(400).send({
+        status: false,
+        message: "Mobile no. should contain only 10 digits",
+      });
+      
+    if (existingData) {
+      if (existingData.mobile == mobile)
+        return res.status(400).send({ msg: "mobile is already in use" });
+    }
     if (!collegeName)
       return res
         .status(400)
@@ -89,7 +78,7 @@ const createIntern = async (req, res) => {
     if (!collegeData)
       return res
         .status(404)
-        .send({ status: false, message: "No Such College Found" }); 
+        .send({ status: false, message: "No Such College Found" });
 
     data.collegeId = collegeData._id.toString(); // to assign college Id in properties of data.
 
@@ -109,5 +98,5 @@ const createIntern = async (req, res) => {
   }
 };
 
-//<<======== ========== Imported Module ============= =====================>>//
+//____________________ Imported Module ________________________________
 module.exports = { createIntern };
