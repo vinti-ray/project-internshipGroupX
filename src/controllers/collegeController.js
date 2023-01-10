@@ -10,7 +10,7 @@ const {
 const createCollege = async function (req, res) {
   try {
     let data = req.body;
-    const { name, fullName, logoLink } = data;
+    const { name, fullName, logoLink } = data; 
 
     if (Object.keys(data).length == 0)
       return res.status(400).send({ status: false, msg: "NO data provided" });
@@ -95,7 +95,7 @@ const getColleges = async (req, res) => {
     const dataOfIntern = await InternModel.find({
       collegeId: dataFromCollege._id,
       isDeleted: false,
-    }).select({ collegeId: 0, __v: 0 });
+    }).select({isDeleted:0, collegeId: 0, __v: 0 });
 
     if (dataOfIntern.length == 0)
       return res
