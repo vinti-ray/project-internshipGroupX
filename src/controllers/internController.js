@@ -19,10 +19,15 @@ const createIntern = async (req, res) => {
 
     let { name, email, mobile, collegeName } = data;
 
-    if(data.isDeleted){
-      if (data.isDeleted!= true && data.isDeleted!= false)
-      return res.status(400).send({status: false, msg: "value of isDeleted should be only boolean" });
-      }
+    if (data.isDeleted) {
+      if (data.isDeleted != true && data.isDeleted != false)
+        return res
+          .status(400)
+          .send({
+            status: false,
+            msg: "value of isDeleted should be only boolean",
+          });
+    }
 
     if (!name)
       return res
@@ -50,7 +55,9 @@ const createIntern = async (req, res) => {
 
     if (existingData) {
       if (existingData.email == email.trim())
-        return res.status(400).send({status: false, msg: "email already in use" });
+        return res
+          .status(400)
+          .send({ status: false, msg: "email already in use" });
     }
 
     if (!mobile)
@@ -63,10 +70,12 @@ const createIntern = async (req, res) => {
         status: false,
         message: "Mobile no. should contain only 10 digits",
       });
-      
+
     if (existingData) {
       if (existingData.mobile == mobile.trim())
-        return res.status(400).send({status: false, msg: "mobile is already in use" });
+        return res
+          .status(400)
+          .send({ status: false, msg: "mobile is already in use" });
     }
     if (!collegeName)
       return res
@@ -78,7 +87,10 @@ const createIntern = async (req, res) => {
         .status(400)
         .send({ status: false, message: "Please Enter Valid CollegeName" });
 
-    let collegeData = await collegeModel.findOne({ name: collegeName.trim(),isDeleted:false });
+    let collegeData = await collegeModel.findOne({
+      name: collegeName.trim(),
+      isDeleted: false,
+    });
 
     if (!collegeData)
       return res
@@ -90,12 +102,11 @@ const createIntern = async (req, res) => {
     let internData = await interModel.create(data);
 
     let newIntern = {
-      isDeleted: internData.isDeleted, 
+      isDeleted: internData.isDeleted,
       name: internData.name,
       email: internData.email,
       mobile: internData.mobile,
       collegeId: internData.collegeId,
-      
     };
 
     return res.status(201).send({ status: true, data: newIntern });

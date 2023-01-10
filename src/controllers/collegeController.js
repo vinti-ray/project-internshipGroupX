@@ -7,8 +7,6 @@ const {
   isValidUrl,
 } = require("../validation/validation");
 
-
-
 const createCollege = async function (req, res) {
   try {
     let data = req.body;
@@ -40,39 +38,38 @@ const createCollege = async function (req, res) {
 
     if (!logoLink) return res.status(400).send({ msg: "logoLink is required" });
 
-
     if (!isValidUrl(logoLink.trim())) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "logolink is invalid , please enter valid logolink",
-        });
+      return res.status(400).send({
+        status: false,
+        message: "logolink is invalid , please enter valid logolink",
+      });
     }
 
-    if(data.isDeleted){
-    if (data.isDeleted!= false && data.isDeleted!= true)
-    return res.status(400).send({status: false, msg: "value of isDeleted should be only boolean" });
+    if (data.isDeleted) {
+      if (data.isDeleted != false && data.isDeleted != true)
+        return res
+          .status(400)
+          .send({
+            status: false,
+            msg: "value of isDeleted should be only boolean",
+          });
     }
 
     const newCollege = await CollegeModel.create(data);
 
-     const Collegeres={
-      name:newCollege.name,
-      fullName:newCollege.fullName,
-      logoLink:newCollege.logoLink,
-      isDeleted:newCollege.isDeleted
-     }
+    const Collegeres = {
+      name: newCollege.name,
+      fullName: newCollege.fullName,
+      logoLink: newCollege.logoLink,
+      isDeleted: newCollege.isDeleted,
+    };
 
-    return res.status(201).send({ status: true, msg: Collegeres});
+    return res.status(201).send({ status: true, msg: Collegeres });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ msg: error.message });
   }
 };
-
-
-
 
 //========= ============== Get Interns Data with College Details ================ =============>>>
 const getColleges = async (req, res) => {
@@ -83,24 +80,39 @@ const getColleges = async (req, res) => {
         .status(400)
         .send({ status: false, message: "Please Enter  College Name" });
     }
+    collegeName = collegeName.trim();
 
-    const dataFromCollege=await CollegeModel.findOne({name:collegeName,isDeleted:false})
+    const dataFromCollege = await CollegeModel.findOne({
+      name: collegeName,
+      isDeleted: false,
+    });
 
-    if(!dataFromCollege)   return res.status(404).send({ status: false, message: "no college found with this name" });
+    if (!dataFromCollege)
+      return res
+        .status(404)
+        .send({ status: false, message: "no college found with this name" });
 
-     const dataOfIntern=await InternModel.find({collegeId:dataFromCollege._id,isDeleted:false}).select({collegeId:0,__v:0})
+    const dataOfIntern = await InternModel.find({
+      collegeId: dataFromCollege._id,
+      isDeleted: false,
+    }).select({ collegeId: 0, __v: 0 });
 
-      if(dataOfIntern.length==0)   return res.status(404).send({ status: false, message: "no intern applied for internship at this college" });
+    if (dataOfIntern.length == 0)
+      return res
+        .status(404)
+        .send({
+          status: false,
+          message: "no intern applied for internship at this college",
+        });
 
-      let data={
-        name:collegeName,
-        fullName:dataFromCollege.fullName,
-        logoLink:dataFromCollege.logoLink,
-        interns:dataOfIntern
-      }
- 
+    let data = {
+      name: collegeName,
+      fullName: dataFromCollege.fullName,
+      logoLink: dataFromCollege.logoLink,
+      interns: dataOfIntern,
+    };
+
     return res.status(200).send({ status: true, data: data });
-
   } catch (err) {
     console.log(err);
     return res.status(500).send({ status: false, message: err.message });
@@ -109,4 +121,3 @@ const getColleges = async (req, res) => {
 
 // << Exported Modules =>>
 module.exports = { createCollege, getColleges };
-

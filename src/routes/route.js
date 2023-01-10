@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const CollegeController= require("../controllers/collegeController");
-const InternController= require("../controllers/internController");
+const CollegeController = require("../controllers/collegeController");
+const InternController = require("../controllers/internController");
 
 //<<<< ========== Open-to-Intern-College (Project-2) ====>>>
 
@@ -19,13 +19,12 @@ router.get("/functionup/collegeDetails", CollegeController.getColleges);
 
 //API for wrong route-of-API
 router.all("/*", function (req, res) {
-    res.status (400).send({
+  res.status(400).send({
     status: false,
-    message: "Path Not Found"
-    })
-    })
+    message: "Path Not Found",
+  });
+});
 
+//<---- -Export router Module
 
-    //<---- -Export router Module
-
-    module.exports=router;
+module.exports = router;
