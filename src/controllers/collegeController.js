@@ -19,7 +19,7 @@ const createCollege = async function (req, res) {
     //name
     if (!name) return res.status(400).send({ msg: "name is required" });
 
-    if (!isValid(name)) {
+    if (!isValid(name.trim())) {
       return res.status(400).send({ status: false, msg: "Name is not valid" });
     }
     //duplicateName
@@ -51,11 +51,12 @@ const createCollege = async function (req, res) {
     }
 
     if(data.isDeleted){
-    if (data.isDeleted!= true && data.isDeleted!= true)
+    if (data.isDeleted!= false && data.isDeleted!= true)
     return res.status(400).send({status: false, msg: "value of isDeleted should be only boolean" });
     }
 
     const newCollege = await CollegeModel.create(data);
+
      const Collegeres={
       name:newCollege.name,
       fullName:newCollege.fullName,
@@ -87,7 +88,7 @@ const getColleges = async (req, res) => {
 
     if(!dataFromCollege)   return res.status(404).send({ status: false, message: "no college found with this name" });
 
-     const dataOfIntern=await InternModel.find({collegeId:dataFromCollege._id,isDeleted:false}).select({isDeleted:0,collegeId:0,__v:0})
+     const dataOfIntern=await InternModel.find({collegeId:dataFromCollege._id,isDeleted:false}).select({collegeId:0,__v:0})
 
       if(dataOfIntern.length==0)   return res.status(404).send({ status: false, message: "no intern applied for internship at this college" });
 
@@ -97,7 +98,7 @@ const getColleges = async (req, res) => {
         logoLink:dataFromCollege.logoLink,
         interns:dataOfIntern
       }
-
+ 
     return res.status(200).send({ status: true, data: data });
 
   } catch (err) {

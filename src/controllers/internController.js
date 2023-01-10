@@ -20,7 +20,7 @@ const createIntern = async (req, res) => {
     let { name, email, mobile, collegeName } = data;
 
     if(data.isDeleted){
-      if (data.isDeleted!= true && data.isDeleted!= true)
+      if (data.isDeleted!= true && data.isDeleted!= false)
       return res.status(400).send({status: false, msg: "value of isDeleted should be only boolean" });
       }
 
@@ -73,12 +73,12 @@ const createIntern = async (req, res) => {
         .status(400)
         .send({ status: false, message: "Please Enter College Name" });
 
-    if (!isValid(collegeName))
+    if (!isValid(collegeName.trim()))
       return res
         .status(400)
         .send({ status: false, message: "Please Enter Valid CollegeName" });
 
-    let collegeData = await collegeModel.findOne({ name: collegeName,isDeleted:false });
+    let collegeData = await collegeModel.findOne({ name: collegeName.trim(),isDeleted:false });
 
     if (!collegeData)
       return res

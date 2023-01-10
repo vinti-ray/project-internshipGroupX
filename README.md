@@ -81,7 +81,7 @@ Refer below sample
 ```yaml
    {
     "isDeleted" : false,
-    "name" : "Jane Does",
+    "name" : "Jane Does", 
     "email" : "jane.doe@iith.in",
     "mobile" : "90000900000",
     "collegeId" : ObjectId("888771129c9ea621dc7f5e3b")
