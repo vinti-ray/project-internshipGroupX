@@ -19,12 +19,17 @@ const createIntern = async (req, res) => {
 
     let { name, email, mobile, collegeName } = data;
 
+    if(data.isDeleted){
+      if (data.isDeleted!= true && data.isDeleted!= true)
+      return res.status(400).send({status: false, msg: "value of isDeleted should be only boolean" });
+      }
+
     if (!name)
       return res
         .status(400)
         .send({ status: false, message: "Please Enter Your Name" });
 
-    if (!isValid(name))
+    if (!isValid(name.trim()))
       return res
         .status(400)
         .send({ status: false, message: "Please Enter Valid Name" });
@@ -34,7 +39,7 @@ const createIntern = async (req, res) => {
         .status(400)
         .send({ status: false, msg: "Please Enter your Email Id" });
 
-    if (!isValidEmail(email))
+    if (!isValidEmail(email.trim()))
       return res
         .status(400)
         .send({ status: false, msg: "Please Enter a valid Email Id." });
@@ -44,8 +49,8 @@ const createIntern = async (req, res) => {
     });
 
     if (existingData) {
-      if (existingData.email == email)
-        return res.status(400).send({ msg: "email already in use" });
+      if (existingData.email == email.trim())
+        return res.status(400).send({status: false, msg: "email already in use" });
     }
 
     if (!mobile)
@@ -60,8 +65,8 @@ const createIntern = async (req, res) => {
       });
       
     if (existingData) {
-      if (existingData.mobile == mobile)
-        return res.status(400).send({ msg: "mobile is already in use" });
+      if (existingData.mobile == mobile.trim())
+        return res.status(400).send({status: false, msg: "mobile is already in use" });
     }
     if (!collegeName)
       return res
@@ -73,7 +78,7 @@ const createIntern = async (req, res) => {
         .status(400)
         .send({ status: false, message: "Please Enter Valid CollegeName" });
 
-    let collegeData = await collegeModel.findOne({ name: collegeName });
+    let collegeData = await collegeModel.findOne({ name: collegeName,isDeleted:false });
 
     if (!collegeData)
       return res
@@ -85,11 +90,12 @@ const createIntern = async (req, res) => {
     let internData = await interModel.create(data);
 
     let newIntern = {
+      isDeleted: internData.isDeleted, 
       name: internData.name,
       email: internData.email,
       mobile: internData.mobile,
       collegeId: internData.collegeId,
-      isDeleted: internData.isDeleted,
+      
     };
 
     return res.status(201).send({ status: true, data: newIntern });

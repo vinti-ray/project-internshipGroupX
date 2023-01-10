@@ -32,7 +32,7 @@ const createCollege = async function (req, res) {
     }
     if (!fullName) return res.status(400).send({ msg: "fullName is required" });
 
-    if (!isValidfullName(fullName)) {
+    if (!isValidfullName(fullName.trim())) {
       return res
         .status(400)
         .send({ status: false, msg: "full name is not valid" });
@@ -41,7 +41,7 @@ const createCollege = async function (req, res) {
     if (!logoLink) return res.status(400).send({ msg: "logoLink is required" });
 
 
-    if (!isValidUrl(logoLink)) {
+    if (!isValidUrl(logoLink.trim())) {
       return res
         .status(400)
         .send({
@@ -50,8 +50,20 @@ const createCollege = async function (req, res) {
         });
     }
 
+    if(data.isDeleted){
+    if (data.isDeleted!= true && data.isDeleted!= true)
+    return res.status(400).send({status: false, msg: "value of isDeleted should be only boolean" });
+    }
+
     const newCollege = await CollegeModel.create(data);
-    return res.status(201).send({ status: true, msg: newCollege });
+     const Collegeres={
+      name:newCollege.name,
+      fullName:newCollege.fullName,
+      logoLink:newCollege.logoLink,
+      isDeleted:newCollege.isDeleted
+     }
+
+    return res.status(201).send({ status: true, msg: Collegeres});
   } catch (error) {
     console.log(error);
     return res.status(500).send({ msg: error.message });
@@ -71,11 +83,11 @@ const getColleges = async (req, res) => {
         .send({ status: false, message: "Please Enter  College Name" });
     }
 
-    const dataFromCollege=await CollegeModel.findOne({name:collegeName})
+    const dataFromCollege=await CollegeModel.findOne({name:collegeName,isDeleted:false})
 
     if(!dataFromCollege)   return res.status(404).send({ status: false, message: "no college found with this name" });
 
-     const dataOfIntern=await InternModel.find({collegeId:dataFromCollege._id}).select({isDeleted:0,collegeId:0,__v:0})
+     const dataOfIntern=await InternModel.find({collegeId:dataFromCollege._id,isDeleted:false}).select({isDeleted:0,collegeId:0,__v:0})
 
       if(dataOfIntern.length==0)   return res.status(404).send({ status: false, message: "no intern applied for internship at this college" });
 
