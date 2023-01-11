@@ -95,7 +95,7 @@ const getColleges = async (req, res) => {
     const dataOfIntern = await InternModel.find({
       collegeId: dataFromCollege._id,
       isDeleted: false,
-    }).select({ collegeId: 0, __v: 0 });
+    }).select({createdAt:0,updatedAt:0, collegeId: 0, __v: 0 });
 
     if (dataOfIntern.length == 0)
       return res
@@ -121,3 +121,10 @@ const getColleges = async (req, res) => {
 
 // << Exported Modules =>>
 module.exports = { createCollege, getColleges };
+
+
+
+
+
+
+

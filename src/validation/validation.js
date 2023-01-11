@@ -17,8 +17,8 @@ const isValidEmail = function (email) {
 
 //_____________________mobile number validation_____________________
 const isValidMobile = function (mobile) {
-  const mobailRegex = /^([+]\d{2})?\d{10}$/;
-  return mobailRegex.test(mobile);
+  const mobailRegex = (/^[0]?[6789]\d{9}$/);
+  return mobailRegex.test(mobile); 
 };
 
 //____________________validate url_______________________

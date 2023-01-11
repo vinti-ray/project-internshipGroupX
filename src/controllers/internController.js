@@ -68,7 +68,7 @@ const createIntern = async (req, res) => {
     if (!isValidMobile(mobile.trim()))
       return res.status(400).send({
         status: false,
-        message: "Mobile no. should contain only 10 digits",
+        message: "Please Enter a valid Mobile Number.",
       });
 
     if (existingData) {
