@@ -28,7 +28,7 @@ const createCollege = async function (req, res) {
         msg: "Can't create newcollege. College name already exist",
       });
     }
-    if (!fullName) return res.status(400).send({ msg: "fullName is required" });
+    if (!fullName) return res.status(400).send({status: false, msg: "fullName is required" });
 
     if (!isValidfullName(fullName.trim())) {
       return res
@@ -36,7 +36,7 @@ const createCollege = async function (req, res) {
         .send({ status: false, msg: "full name is not valid" });
     }
 
-    if (!logoLink) return res.status(400).send({ msg: "logoLink is required" });
+    if (!logoLink) return res.status(400).send({status: false, msg: "logoLink is required" });
 
     if (!isValidUrl(logoLink.trim())) {
       return res.status(400).send({
