@@ -99,9 +99,9 @@ const getColleges = async (req, res) => {
 
     if (dataOfIntern.length == 0)
       return res
-        .status(404)
+        .status(200)
         .send({
-          status: false,
+          status: true,
           message: "no intern applied for internship at this college",
         });
 
