@@ -11,6 +11,7 @@ const {
 
 //======= Create Intern Data
 const createIntern = async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin","*")
   try {
     const data = req.body;
 
@@ -115,5 +116,5 @@ const createIntern = async (req, res) => {
   }
 };
 
-//____________________ Imported Module ________________________________
+//____________________ Exported Module ________________________________
 module.exports = { createIntern };

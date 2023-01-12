@@ -10,6 +10,7 @@ const {
 const createCollege = async function (req, res) {
   try {
     let data = req.body;
+    console.log(data)
     const { name, fullName, logoLink } = data; 
 
     if (Object.keys(data).length == 0)
@@ -73,6 +74,7 @@ const createCollege = async function (req, res) {
 
 //========= ============== Get Interns Data with College Details ================ =============>>>
 const getColleges = async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin","*")
   try {
     let collegeName = req.query.collegeName;
     if (!collegeName) {
@@ -95,6 +97,7 @@ const getColleges = async (req, res) => {
     const dataOfIntern = await InternModel.find({
       collegeId: dataFromCollege._id,
       isDeleted: false,
+      
     }).select({createdAt:0,updatedAt:0, collegeId: 0, __v: 0 });
 
     if (dataOfIntern.length == 0)
